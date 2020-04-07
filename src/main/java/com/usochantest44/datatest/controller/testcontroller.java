@@ -27,7 +27,7 @@ public class testcontroller {
     @PostMapping("/test2")
     public String test2(@RequestBody Map<String, Object> searchMap, int page, int size) {
 
-        System.out.println(page+""+size);
+        System.out.println(page+""+size+"开发人员写了一句话");
 
         PageHelper.startPage(page,size);
 
