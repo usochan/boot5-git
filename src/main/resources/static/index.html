@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>结算页</title>
+    <link rel="stylesheet" type="text/css" href="./css/all.css" />
+    <link rel="stylesheet" type="text/css" href="./css/pages-getOrderInfo.css" />
+</head>
+<div id="app">
+    <a>小嘘</a>
+    <a @click="usotest()" >测试</a>
+    <p>{{uso}}</p>
+
+    <el-form :inline="true">
+        <el-form-item label="uid啊">
+            <el-input  placeholder="uid" v-model="searchMap.uid"></el-input>
+        </el-form-item>
+        <el-form-item label="小嘘名字">
+            <el-input placeholder="小嘘名字" v-model="searchMap.name"></el-input>
+        </el-form-item>
+        <el-button type="primary" @click="usochantest">查询</el-button>
+
+    </el-form>
+
+
+    <template>
+        <el-table
+                :data="usochan"
+                style="width: 100%">
+            <el-table-column
+                    prop="uid"
+                    label="uid而已"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="180">
+            </el-table-column>
+        </el-table>
+
+        <div class="pagination-container">
+            <el-pagination
+                    class="pagiantion"
+                    @size-change="usochantest"
+                    @current-change="usochantest"
+                    :current-page.sync="currentPage"
+                    :page-sizes="[10, 20, 30, 40]"
+                    :page-size="size"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+            </el-pagination>
+        </div>
+
+    </template>
+</div>
+
+
+
+</body>
+<script src="../js/vue.js"></script>
+<script src="../js/elementui.js"></script>
+<script src="../js/axios.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<script>
+    new Vue({
+        el:'#app',
+        data(){
+            return {
+                size: 5,
+                searchMap: {},
+                currentPage: 1,
+                uso:null,
+                usochan:[{
+                    uid: '1112',
+                    name: '王小虎'
+                       },
+                        {
+                        uid: '11123',
+                        name: '王小虎2'
+                       }
+                ]
+            }
+        },
+        created(){
+            this.usochantest();
+        },
+
+        methods:{
+            usotest(){
+                axios.get('/hello').then( response=>{
+                    alert(response.data);
+                    this.uso=response.data;
+                })
+            },
+            usochantest(){
+
+                axios.post(`/test2?page=${this.currentPage}&size=${this.size}`,this.searchMap).then( response=>{
+                this.usochan = response.data;
+            })
+            }
+        }
+    })
+</script>
+</html>

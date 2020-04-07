@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  使用通用tkmapper只需要继承接口即可-->
+<mapper namespace="com.usochantest44.datatest.mapper.hgameMapper">
+    <select id="findkeyByName" parameterType="int" resultType="com.usochantest44.datatest.pojo.hgame">
+             select * from hgame where hid =#{value}
+  </select>
+
+    <resultMap id="usochanMap" type="com.usochantest44.datatest.pojo.HgameNode">
+        <id column="one_id" property="hid"></id>
+        <result column="one_name" property="hname"></result>
+        <collection property="children" ofType="com.usochantest44.datatest.pojo.HgameNode">
+            <id column="two_id" property="hid"></id>
+            <result column="two_name" property="hname"></result>
+
+            <collection property="children" ofType="com.usochantest44.datatest.pojo.HgameNode">
+                <id column="three_id" property="hid"></id>
+                <result column="three_name" property="hname"></result>
+            </collection>
+        </collection>
+
+
+    </resultMap>
+
+
+    <select id="selectUsochan" parameterType="int" resultMap="usochanMap">
+        SELECT
+        a.hid one_id,
+        a.hname one_name,
+        b.hid two_id,
+        b.hname two_name,
+        c.hid three_id,
+        c.hname three_name
+        FROM
+        hgame a
+        LEFT JOIN hgame b ON a.hid = b.parentId
+        LEFT JOIN hgame c ON c.parentId = b.hid
+        WHERE
+        a.parentId = '0'
+        <if test="_parameter!=null and _parameter!=''">
+            And a.hid = #{hid}
+        </if>
+
+    </select>
+
+
+</mapper>
